@@ -2,9 +2,6 @@
 
 # Everything is named as the containing folder.
 NAME=$(basename $(pwd))
-
-# Start fresh.
-rm -rf bin javadoc $NAME.jar $NAME.zip
 mkdir -p bin javadoc
 
 # Compile and build docs.
