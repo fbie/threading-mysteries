@@ -7,7 +7,7 @@ public class MysteryArrayList2<T> implements IMysteryArrayList<T> {
 
     /**
      * Create a new MysteryArrayList2 instance.
-     * @param array The array to back this MysteryArrayList1 instance.
+     * @param array The array to back this MysteryArrayList2 instance.
      */
     public MysteryArrayList2(T[] array) {
         this.array = array.clone();
