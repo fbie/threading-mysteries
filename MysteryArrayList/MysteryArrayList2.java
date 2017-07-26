@@ -3,7 +3,7 @@ package dk.itu.pcpp;
 public class MysteryArrayList2<T> implements IMysteryArrayList<T> {
 
     private final T[] array;
-    private int last;
+    private volatile int last;
 
     /**
      * Create a new MysteryArrayList2 instance.
