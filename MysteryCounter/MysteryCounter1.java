@@ -4,8 +4,12 @@ public class MysteryCounter1 implements IMysteryCounter {
 
     private long count;
 
-    public MysteryCounter1() {
-        count = 0L;
+    /**
+     * Create a new MysteryCounter1 instance.
+     * @param value The start value for this counter.
+     */
+    public MysteryCounter1(long value) {
+        count = value;
     }
 
     @Override
