@@ -8,8 +8,8 @@ For instance, a supposedly thread safe counter may be working correctly for the 
 
 Here is a possible ordering of the mysteries:
 
-1. [MysteryCounter](tree/master/MysteryCounter)
-2. [MysteryArrayList](tree/master/MysteryArrayList)
+1. [MysteryCounter](MysteryCounter)
+2. [MysteryArrayList](MysteryArrayList)
 
 
 
