@@ -18,12 +18,12 @@ public class MysteryCounter2 implements IMysteryCounter {
     }
 
     @Override
-    public synchronized long get() {
+    public long get() {
         return count;
     }
 
     @Override
-    public String toString() { // NB: Not synchronized.
+    public synchronized String toString() {
         return "Current count is " + count;
     }
 }
