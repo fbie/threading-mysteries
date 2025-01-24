@@ -53,9 +53,9 @@ class SequenceBuilderA : ISequenceBuilder {
 }
 
 class SequenceBuilderB : ISequenceBuilder {
-    private volatile int _n;
+    private int _n;
     private List<int> _ns = new List<int>();
-    private int _current = 0;
+    private volatile int _current = 0;
 
     public SequenceBuilderB(int n) {
         _n = n;
