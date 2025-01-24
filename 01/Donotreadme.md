@@ -1,4 +1,4 @@
-# Sequence Generator #
+# A Parallel Sequence Generator #
 
 Two threads are trying to construct a sequence of numbers, going from 1 to n.
 
