@@ -6,7 +6,7 @@ Instead, compile and run the program:
 
 ```
 > dotnet build
-> dotnet run -- <variant> <set-size> <path fo file> <path to another file> ...
+> dotnet run -- <variant> <number of sets> <path fo file> <path to another file> ...
 ```
 
 where `<variant>` is one of
@@ -16,6 +16,8 @@ where `<variant>` is one of
 - `C`.
 
 You can pass zero or more paths to text files.
+
+Make sure that the `<number of sets>` argument matches the input files' number of sets, e.g. `input-1000-200-a.txt` has been generated with `<number of sets> = 1000`.
 
 Try different combinations:
 
@@ -29,5 +31,5 @@ Try different combinations:
 In case you do not get any interesting results with the already generated input text files, run `gen-input.fsx` as follows:
 
 ```
-> dotnet fsi gen-input.fsx <maximum-index> <number-of-operations> input.txt
+> dotnet fsi gen-input.fsx <number of sets> <number of operations> input.txt
 ```
