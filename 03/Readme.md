@@ -22,3 +22,12 @@ Try different combinations:
 - What does the program do?
 - Can you see the variants behave differently?
 - If yes, what do you think causes the differences?
+
+
+### Generating New Input ###
+
+In case you do not get any interesting results with the already generated input text files, run `gen-input.fsx` as follows:
+
+```
+> dotnet fsi gen-input.fsx <maximum-index> <number-of-operations> input.txt
+```
