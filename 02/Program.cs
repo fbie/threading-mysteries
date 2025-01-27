@@ -36,6 +36,8 @@ foreach (var t in threads) {
 }
 h.Print();
 
+// --- The mysterious implementation. ---
+
 interface IHistogram {
     void Add(char c);
     void Print();

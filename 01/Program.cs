@@ -23,6 +23,8 @@ t1.Join();
 
 b.Print();
 
+// --- The mysterious implementation. ---
+
 interface ISequenceBuilder {
     bool Next();
     void Print();

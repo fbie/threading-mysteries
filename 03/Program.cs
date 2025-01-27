@@ -51,6 +51,8 @@ foreach (var set in sets) {
 }
 Console.WriteLine($"Largest set: {largest.Id} with {largest.Size}.");
 
+// --- The mysterious implementation. ---
+
 abstract class Set {
     public int Id { get; }
     public int Size { get; set; }
