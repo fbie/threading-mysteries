@@ -20,10 +20,13 @@ Set[] sets = args[0] switch {
 };
 
 var threads = new List<Thread>();
+var barrier = new Barrier(args.Length - 1); // Num threads + main thread.
 for (var i = 2; i < args.Length; i++) {
     var arg = args[i];
     var t = new Thread(() => {
-        foreach (var line in File.ReadLines(arg)) {
+        var lines = File.ReadAllLines(arg);
+        barrier.SignalAndWait();
+        foreach (var line in lines) {
             var split = line.Split(" ");
             var x = int.Parse(split[0]);
             var y = int.Parse(split[1]);
@@ -37,12 +40,17 @@ for (var i = 2; i < args.Length; i++) {
 foreach (var t in threads) {
     t.Start();
 }
+barrier.SignalAndWait();
 foreach (var t in threads) {
     t.Join();
 }
+Set largest = sets[0];
 foreach (var set in sets) {
-    Console.WriteLine($"{set.Id} -> {set.Parent.Id}");
+    if (largest.Size < set.Size) {
+        largest = set;
+    }
 }
+Console.WriteLine($"Largest set: {largest.Id} with {largest.Size}.");
 
 abstract class Set {
     public int Id { get; }
@@ -67,20 +75,18 @@ abstract class Set {
         return x;
     }
 
-    public abstract Set Find();
+    public Set Find() {
+        if (Parent != this) {
+            Parent = Parent.Find();
+        }
+        return Parent;
+    }
 
     public abstract Set Union(Set other);
 }
 
 class SetB : Set {
     public SetB(int id) : base(id) {}
-
-    public override Set Find() {
-        if (Parent != this) {
-            Parent = Parent.Find();
-        }
-        return Parent;
-    }
 
     public override Set Union(Set other) {
         var x = this.Find();
@@ -91,13 +97,6 @@ class SetB : Set {
 
 class SetA : Set {
     public SetA(int id) : base(id) {}
-
-    public override Set Find() {
-        if (Parent != this) {
-            Parent = Parent.Find();
-        }
-        return Parent;
-    }
 
     public override Set Union(Set other) {
         Set x = this;
@@ -118,13 +117,6 @@ class SetA : Set {
 
 class SetC : Set {
     public SetC(int id) : base(id) {}
-
-    public override Set Find() {
-        if (Parent != this) {
-            Parent = Parent.Find();
-        }
-        return Parent;
-    }
 
     public override Set Union(Set other) {
         Set x = this;
