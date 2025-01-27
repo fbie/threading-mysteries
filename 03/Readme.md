@@ -1,4 +1,4 @@
-# Threading Mystery 02 #
+# Threading Mystery 03 #
 
 Do not look at the code yet!
 
@@ -6,7 +6,7 @@ Instead, compile and run the program:
 
 ```
 > dotnet build
-> dotnet run -- <variant> <path fo file> <path to another file> ...
+> dotnet run -- <variant> <set-size> <path fo file> <path to another file> ...
 ```
 
 where `<variant>` is one of

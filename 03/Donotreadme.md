@@ -1,19 +1,21 @@
-# A Parallel Character Histogram #
+# A Parallel Union Find Implementation #
 
 For each file name, a new thread is started that
 
 1. reads the entire file; and
-2. adds the frequency of each character in the file to a shared histogram.
+2. for each line, performs a union operations on the two sets specified.
+
 
 ## A ##
 
-A simple non-thread safe implementation using `Dicionary<char, int>`. Trying to run with more than one thread crashes the program.
+A thread-safe implementation; it synchronizes on the parents of two sets, but only after sorting them by `Id` to avoid deadlocking in case another thread attempts to lock them in the opposite order.
+
 
 ## B ##
 
-A thread-safe implementation using `Dictionary<char, int>`. When adding an entry to the histogram, the method takes a lock on the `_chars` dictionary, which avoids concurrent modifications and thereby corrupting the state of the dictionary. However, mutual exclusion means slower run-time performance -- at least, that is the colloquial wisdom.
+A non thread-safe implementation. This can in the worst case crash with a stack overflow error, because of spurious synchronizations s.t. `Find()` never terminates, either because the `Parent` constantly changes, or because no synchronization happens and a transient cyclic dependency seems to be in place, but only from the point of view of the crashing thread.
 
 
 ## C ##
 
-A thread-safe implementation that uses `ConcurrentDictionary<char, int>` instead of locking. This dictionary implementation uses a more complicated and fine-grained mechanism to ensure synchronization and atomic updates. Colloquial wisdom says that this is faster, but that may depend very much on the workload.
+A non thread-safe implementation that omits to sort sets by their `Id`, which is why it is amenable to deadlock.
