@@ -7,9 +7,8 @@ Set[] MakeSets(int size, Func<int, Set> make) {
     }
     return sets;
 }
-
 if (args.Length < 2) {
-    Console.WriteLine("Usage: 02 [A|B|C] <number-of-sets> <path to file> <path to file>...");
+    Console.WriteLine("Usage: 03 [A|B|C] <number-of-sets> <path to file> <path to file>...");
 }
 var n = int.Parse(args[1]);
 Set[] sets = args[0] switch {
@@ -64,6 +63,8 @@ abstract class Set {
     }
 
     protected static Set Assign(Set x, Set y) {
+        x = x.Find();
+        y = y.Find();
         if (x == y) {
             return x;
         }
@@ -71,7 +72,9 @@ abstract class Set {
             (x, y) = (y, x);
         }
         y.Parent = x;
-        x.Size += y.Size;
+        var size = x.Size + y.Size;
+        x.Size = size;
+        y.Size = size;
         return x;
     }
 
@@ -85,47 +88,42 @@ abstract class Set {
     public abstract Set Union(Set other);
 }
 
-class SetB : Set {
-    public SetB(int id) : base(id) {}
-
-    public override Set Union(Set other) {
-        var x = this.Find();
-        var y = other.Find();
-        return Assign(x, y);
-    }
-}
-
 class SetA : Set {
     public SetA(int id) : base(id) {}
 
     public override Set Union(Set other) {
-        Set x = this;
-        var y = other;
+        var x = this.Find();
+        var y = other.Find();
         // Ensure that locking happens always in the same order for
-        // all threads.
+        // all threads to avoid deadlock if another thread locks
+        // first y and then x.
         if (y.Id < x.Id) {
             (x, y) = (y, x);
         }
         lock (x)
         lock (y) {
-            x = x.Find();
-            y = y.Find();
             return Assign(x, y);
         }
     }
+}
+
+class SetB : Set {
+    public SetB(int id) : base(id) {}
+
+    // No synchronization whatsoever - this may cause stack overflows
+    // on spurious synchronizations.
+    public override Set Union(Set other) => Assign(this, other);
 }
 
 class SetC : Set {
     public SetC(int id) : base(id) {}
 
     public override Set Union(Set other) {
-        Set x = this;
-        var y = other;
+        var x = this.Find();
+        var y = other.Find();
         // No swapping, this can deadlock.
         lock (x)
         lock (y) {
-            x = x.Find();
-            y = y.Find();
             return Assign(x, y);
         }
     }
