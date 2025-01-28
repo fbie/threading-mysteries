@@ -5,6 +5,7 @@ using System.Threading;
 
 if (args.Length < 2) {
     Console.WriteLine("Usage: 02 [A|B|C] <path to file> <path to file>...");
+    return;
 }
 IHistogram h = args[0] switch {
     "A" => new HistogramA(),

@@ -1,7 +1,8 @@
 ﻿using System.Threading;
 
 if (args.Length != 2) {
-    Console.WriteLine("Usage: 01 [A|B|C] n");
+    Console.WriteLine("Usage: 01.exe [A|B|C] <count>");
+    return;
 }
 var n = int.Parse(args[1]);
 ISequenceBuilder b = args[0] switch {
