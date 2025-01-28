@@ -1,4 +1,5 @@
-﻿if (args.Length != 3)
+﻿#pragma warning disable CS4014
+if (args.Length != 3)
 {
     Console.WriteLine("Usage: 04 [A|B|C] <number-of-threads> <number-of-increments>");
     return;
