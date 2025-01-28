@@ -16,7 +16,7 @@ var increments = int.Parse(args[2]);
 var barrier = new Barrier(threads + 1);
 for (var i = 0; i < threads; i++)
 {
-    Task.Run(() =>
+    new Thread(() =>
     {
         barrier.SignalAndWait();
         for (var j = 0; j < increments; j++)
@@ -24,7 +24,7 @@ for (var i = 0; i < threads; i++)
             counter.Increment();
         }
         barrier.SignalAndWait();
-    });
+    }).Start();
 }
 var sw = new System.Diagnostics.Stopwatch();
 sw.Start();
