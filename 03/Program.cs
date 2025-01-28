@@ -8,7 +8,7 @@ Set[] MakeSets(int size, Func<int, Set> make) {
     return sets;
 }
 if (args.Length < 2) {
-    Console.WriteLine("Usage: 03 [A|B|C] <number-of-sets> <path to file> <path to file>...");
+    Console.WriteLine("Usage: 03.exe [A|B|C] <number-of-sets> <path to file> <path to file>...");
     return;
 }
 var n = int.Parse(args[1]);

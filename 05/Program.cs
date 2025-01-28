@@ -2,7 +2,7 @@
 
 if (args.Length != 2)
 {
-    Console.WriteLine("Usage: 05 [A|B|C] <number-of-factors>");
+    Console.WriteLine("Usage: 05.exe [A|B|C] <number-of-factors>");
     return;
 }
 var n = int.Parse(args[1]);
