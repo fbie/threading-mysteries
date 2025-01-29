@@ -6,7 +6,7 @@ Instead, compile and run the program:
 
 ```
 > dotnet build
-> dotnet run -- <variant> <number of sets> <path fo file> <path to another file> ...
+> dotnet run <variant> <number of sets> <path fo file> <path to another file> ...
 ```
 
 where `<variant>` is one of

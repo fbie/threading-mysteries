@@ -6,7 +6,7 @@ Instead, compile and run the program:
 
 ```
 > dotnet build
-> dotnet run -- <variant> <number of threads>
+> dotnet run <variant> <number of threads>
 ```
 
 where `<variant>` is one of

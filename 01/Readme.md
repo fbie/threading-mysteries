@@ -6,7 +6,7 @@ Instead, compile and run the program:
 
 ```
 > dotnet build
-> dotnet run -- <variant> <input size>
+> dotnet run <variant> <input size>
 ```
 
 where `<variant>` is one of

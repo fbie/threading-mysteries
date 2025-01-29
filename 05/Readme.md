@@ -6,7 +6,7 @@ Instead, compile and run the program:
 
 ```
 > dotnet build
-> dotnet run -- <variant> <number of factors>
+> dotnet run <variant> <number of factors>
 ```
 
 where `<variant>` is one of
