@@ -53,6 +53,8 @@ In small groups (2-3), your task is to:
 
 Observe and interpret!
 
+<center>https://simhub.simcorp.com/FLBM/threading-mysteries</center>
+
 ---
 
 # Solving the Mysteries #
