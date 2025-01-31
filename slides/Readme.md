@@ -27,12 +27,36 @@ Analyzing threading bugs is:
 
 ---
 
+# Crash Course in .NET Threading #
+
+```csharp
+var t = new Thread(() => ...);
+// Start thread t.
+t.Start();
+// Wait for t to finish.
+t.Join();
+// Submit task to thread pool.
+var s = Task.Run(() => ...);
+// Wait for task s to finish.
+s.Wait();
+
+class C {
+    readonly object _object = new();
+    public void F() {
+        // Enter lock on _object
+        // from current thread.
+        lock (_object) { ... }
+    }}
+```
+
+---
+
 # This Session #
 
-This session is structured through "threading mysteries". Each mystery:
+There are six "threading mysteries". Each mystery:
 
-- does *something* with .NET threads;
-- takes some kind of input (numbers, files, ...); and
+- takes some kind of input (numbers, files, ...);
+- does *something* with .NET threads; and
 - comes in up to three variants, `A`, `B` and `C`.
 
 Goals:
@@ -53,8 +77,12 @@ In small groups (2-3), your task is to:
 
 Observe and interpret!
 
-<center>https://simhub.simcorp.com/FLBM/threading-mysteries</center>
-
+Do **now**:
+```
+> git clone https://simhub.simcorp.com/FLBM/threading-mysteries.git
+> cd threading-mysteries
+> dotnet build
+```
 ---
 
 # Solving the Mysteries #
@@ -479,6 +507,8 @@ class TaskRunner : IRunner {
 
 # Recommended Reading #
 
-- "Java Concurrency in Practice", Brian Goetz (with Tim Peierls et al., 2006)
-- "C# Precisely", Peter Sestoft (2nd edition, 2012)
+- "Java Concurrency in Practice", Brian Goetz with Tim Peierls et al., 2006
+- "C# Precisely", Peter Sestoft, 2nd edition, 2012
 - "The Art of Multiprocessor Programming", Herlihy & Shavit, 2012
+- "Teaching Programming languages by experimental and adversarial thinking.", Pombrio, J., Krishnamurthi, S. & Fisler, K., SNAPL 2017
+- https://github.com/shriram/mystery-languages
