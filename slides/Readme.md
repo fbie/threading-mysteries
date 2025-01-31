@@ -27,6 +27,18 @@ Analyzing threading bugs is:
 
 ---
 
+# Parallelism #
+
+![](slides/vending-machine-parallelism.jpeg)
+
+---
+
+# Concurrency #
+
+![](slides/vending-machine-concurrency.jpeg)
+
+---
+
 # Crash Course in .NET Threading #
 
 ```csharp
