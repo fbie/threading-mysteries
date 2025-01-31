@@ -50,7 +50,7 @@ foreach (var set in sets) {
         largest = set;
     }
 }
-Console.WriteLine($"Largest set: {largest.Id} with {largest.Size}.");
+Console.WriteLine($"Largest set has {largest.Size} elements.");
 
 // --- The mysterious implementation. ---
 
