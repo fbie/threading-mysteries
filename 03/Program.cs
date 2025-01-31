@@ -71,7 +71,7 @@ abstract class Set {
         if (x == y) {
             return x;
         }
-        if (x.Size < y.Size) {
+        if (y.Id < x.Id) {
             (x, y) = (y, x);
         }
         y.Parent = x;
