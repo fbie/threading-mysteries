@@ -1,6 +1,9 @@
 # .NET Threading Mystery Classes #
 
-Some C# classes that do mysterious threading things. They are intended to guide the discussion during the OTC knowledge sharing session on .NET threading.
+Some C# classes that do mysterious threading things.
+
+Do not browse the source code if you want to solve the mysteries!
+
 
 ## How to build and run ##
 
@@ -24,6 +27,14 @@ Enter each mystery and run the compiled code using
 ```
 $ dotnet run
 ```
+
+There (up to) are three variants for each mystery.
+
+- What do you observe when running the different variants?
+- Do they behave the same?
+- Are they predictable?
+- Can you form a theory about the underlying implementation?
+
 
 ## Acknowledgements ##
 
