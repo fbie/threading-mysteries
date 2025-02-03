@@ -24,3 +24,15 @@ Enter each mystery and run the compiled code using
 ```
 $ dotnet run
 ```
+
+## Acknowledgements ##
+
+Threading mysteries are strongly inspired by:
+
+- Shriram Krishnamurthi's [Mystery Languages](https://github.com/shriram/mystery-languages); and
+- the paper [Teaching Programming Languages by Experimental and Adversarial Thinking.](https://cs.brown.edu/~sk/Publications/Papers/Published/pkf-teach-pl-exp-adv-think/)
+
+Threading variants are based on:
+
+- Brian Goetz' [Java Concurrency in Practice]; and
+- Peter Sestoft's course [Practical Parallel and Concurrent Programming](https://www.itu.dk/people/sestoft/itu/PCPP/E2016/) (note that there exist more recent versions of the course).
