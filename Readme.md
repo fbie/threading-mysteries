@@ -47,3 +47,5 @@ Threading variants are based on:
 
 - Brian Goetz' [Java Concurrency in Practice](https://www.oreilly.com/library/view/java-concurrency-in/0321349601/); and
 - Peter Sestoft's course [Practical Parallel and Concurrent Programming](https://www.itu.dk/people/sestoft/itu/PCPP/E2016/) (note that there exist more recent versions of the course).
+
+Threading mysteries were developed at [SimCorp A/S](https://simcorp.com) for the OTC Core Knowledge Sharing series.
