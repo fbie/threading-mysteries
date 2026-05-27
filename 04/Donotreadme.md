@@ -12,9 +12,9 @@ A lock-free implementation of a counter. All synchronization happens through int
 
 ## B ##
 
-A locking implementation, simple but inefficient under high load. Each increment locks, so does reading the current value.
+A lock-free implementation that is cache-aware. To avoid the "false sharing" by invalidating the cache across all cores when writing, the counter's value is split across multiple values in an array. Each value in the array occupies 64 bytes, which is usually the size of a cache-line on modern CPUs.
 
 
 ## C ##
 
-A lock-free implementation that is cache-aware. To avoid the "false sharing" by invalidating the cache when writing, the counter's value is split across multiple values in an array. We only access indices in the array whose values are not on the same cache line. Values are striped, meaning it is possible that two threads write to the same index in an array, but not extremely likely.
+A locking implementation, simple but inefficient under high load. Each increment locks, so does reading the current value.

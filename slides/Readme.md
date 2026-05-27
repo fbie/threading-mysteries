@@ -373,22 +373,23 @@ class InterlockedCounter : ICounter {
 
 # Mystery 4: B #
 ```csharp
-class PaddedCounter : ICounter {
-    int S = 31;
-    int P = 64 * 8 / sizeof(long);
-    long[] _vs = new long[S * P];
+class PaddedCounter : ICounter
+{
+    [StructLayout(LayoutKind.Explicit, Size=64)]
+    struct PaddedLong { [FieldOffset(0)] public long V; }
+
+    private readonly PaddedLong[] _vs = new PaddedLong[32];
 
     public long Value { get {
         var s = 0L;
-        for (var i = 0; i < _vs.Length; i += P)
-            s += Interlocked.Read(ref _vs[i]);
+        for (var i = 0; i < _vs.Length; i++)
+            s += Interlocked.Read(ref _vs[i].V);
         return s;
     }}
 
-    public void Add(long value) {
-        var h = CurrentThread.GetHashCode();
-        var i = h % S * P;
-        Interlocked.Add(ref _vs[i], value);
+    public void Add(long n) {
+        var i = Thread.CurrentThread.ManagedThreadId % 32;
+        Interlocked.Add(ref _vs[i].V, n);
     }
 ```
 ---
