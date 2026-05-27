@@ -78,7 +78,7 @@ class PaddedCounter : ICounter
     }
 
     public void Add(long value)
-        => Interlocked.Add(ref _values[Thread.CurrentThread.GetHashCode() % STRIPES * PADDING], value);
+        => Interlocked.Add(ref _values[Thread.CurrentThread.ManagedThreadId % STRIPES * PADDING], value);
 
     public void Increment() => Add(1L);
 }
