@@ -1,6 +1,6 @@
 # .NET Threading Mysteries #
 #### Florian Biermann ####
-##### `flbm@simcorp.com` #####
+##### `florian.biermann@protonmail.com` #####
 
 ---
 
@@ -10,7 +10,7 @@
 - A thread is an independent unit of execution.
 - Lots of benefits: responsive GUI, higher throughput, more modular code.
 - Lots of problems: race conditions, deadlocks, starvation, and so on.
-- Problems are real: we find threading bugs in the IMS code base.
+- Problems are real and hard to detect.
 
 ---
 
