@@ -61,17 +61,9 @@ class InterlockedCounter : ICounter
 
 class PaddedCounter : ICounter
 {
-    [StructLayout(LayoutKind.Sequential, Size=64)]
+    [StructLayout(LayoutKind.Explicit, Size=64)]
     struct PaddedLong {
-        public long Value; // 8 bytes payload +
-        private byte        // 56 bytes padding = 64 bytes.
-            _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08,
-            _p09, _p10, _p11, _p12, _p13, _p14, _p15, _p16,
-            _p17, _p18, _p19, _p20, _p21, _p22, _p23, _p24,
-            _p25, _p26, _p27, _p28, _p29, _p30, _p31, _p32,
-            _p33, _p34, _p35, _p36, _p37, _p38, _p39, _p40,
-            _p41, _p42, _p43, _p44, _p45, _p46, _p47, _p48,
-            _p49, _p50, _p51, _p52, _p53, _p54, _p55, _p56;
+        [FieldOffset(0)] public long Value;
     }
 
     private const int STRIPES = 32;
