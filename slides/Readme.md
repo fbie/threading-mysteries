@@ -91,7 +91,7 @@ Observe and interpret!
 
 Do **now**:
 ```
-> git clone https://simhub.simcorp.com/FLBM/threading-mysteries.git
+> git clone https://github.com/fbie/threading-mysteries.git
 > cd threading-mysteries
 > dotnet build
 ```
@@ -101,8 +101,8 @@ Do **now**:
 
 In the code we display:
 
-- are modifiers like `readonly` omitted unless important; and
-- are constructors omitted.
+- modifiers like `readonly` are omitted, unless important; and
+- constructors are omitted.
 
 ---
 
