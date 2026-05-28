@@ -7,9 +7,9 @@ Do not browse the source code if you want to solve the mysteries!
 
 ## How to build and run ##
 
-Please install the .NET SDK version 8:
+Please install the .NET SDK version 10:
 
-- either by visiting the [download page](https://dotnet.microsoft.com/en-us/download/dotnet/8.0); or
+- either by visiting the [download page](https://dotnet.microsoft.com/en-us/download/dotnet/10.0); or
 - by executing the script `dotnet-install.sh` in this repository (this is the official Microsoft .NET installation script.)
 
 Make sure that the `dotnet` executable is in your environment variables.
@@ -17,23 +17,32 @@ Make sure that the `dotnet` executable is in your environment variables.
 To test, run the following command from the root folder of this repository:
 
 ```
-$ dotnet build
+$ dotnet build -c Release
 ```
 
 ## Solve the Mysteries ##
 
-Enter each mystery and run the compiled code using
+Enter a mystery directory and run the compiled code using
 
 ```
-$ dotnet run
+$ dotnet run --no-build -c Release -- [ A | B | C ] <more options> ...
 ```
 
-There (up to) are three variants for each mystery.
+There are (up to) three variants (`A`, `B` and `C`) for each mystery.
 
 - What do you observe when running the different variants?
 - Do they behave the same?
 - Are they predictable?
-- Can you form a theory about the underlying implementation?
+- Is the outcome the same from run to run?
+- Can you form a theory about each underlying implementation?
+
+### Inspecting Mysterious Behavior ###
+
+If a mystery behaves strangely, can you observe anything interesting using `dotnet dump` or `dotnet trace`? Install them via:
+
+```
+$ dotnet tool install --global dotnet-dump dotnet-trace
+```
 
 
 ## Acknowledgements ##
