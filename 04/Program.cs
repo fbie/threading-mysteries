@@ -14,7 +14,7 @@ ICounter counter = args[0] switch
     _ => throw new ArgumentException("Choose one of A, B or C")
 };
 var threads = int.Parse(args[1]);
-var increments = int.Parse(args[2]);
+var increments = long.Parse(args[2]);
 var barrier = new Barrier(threads + 1);
 for (var i = 0; i < threads; i++)
 {
@@ -25,15 +25,15 @@ for (var i = 0; i < threads; i++)
         {
             counter.Increment();
         }
-        barrier.SignalAndWait();
     }).Start();
 }
-var sw = new System.Diagnostics.Stopwatch();
-sw.Start();
+// var sw = new System.Diagnostics.Stopwatch();
+// sw.Start();
 barrier.SignalAndWait();
-barrier.SignalAndWait();
-sw.Stop();
-Console.WriteLine($"Counter value: {counter.Value}\nTook {sw.ElapsedMilliseconds}ms");
+while (counter.Value < threads * increments) { }
+// sw.Stop();
+Console.WriteLine($"Counter value: {counter.Value}");
+// Console.WriteLine($"Took {sw.ElapsedMilliseconds}ms");
 
 interface ICounter
 {
