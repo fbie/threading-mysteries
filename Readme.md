@@ -32,8 +32,8 @@ There are (up to) three variants (`A`, `B` and `C`) for each mystery.
 
 - What do you observe when running the different variants?
 - Do they behave the same?
+- What happens if you change the input arguments?
 - Are they predictable?
-- Is the outcome the same from run to run?
 - Can you form a theory about each underlying implementation?
 
 ### Inspecting Mysterious Behavior ###
