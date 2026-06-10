@@ -28,17 +28,8 @@ interface IFactorizer
     void Run();
 }
 
-class ParallelForFactorizer : IFactorizer
+class ParallelForFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
 {
-    private readonly ConcurrentBag<int> _ns;
-    private readonly ConcurrentDictionary<int, IReadOnlyList<int>> _fs;
-
-    public ParallelForFactorizer(ConcurrentBag<int> ns, ConcurrentDictionary<int, IReadOnlyList<int>> fs)
-    {
-        _ns = ns;
-        _fs = fs;
-    }
-
     public void Run()
     {
         Parallel.ForEach(_ns, n => {
@@ -47,17 +38,8 @@ class ParallelForFactorizer : IFactorizer
     }
 }
 
-class ThreadFactorizer : IFactorizer
+class ThreadFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
 {
-    private readonly ConcurrentBag<int> _ns;
-    private readonly ConcurrentDictionary<int, IReadOnlyList<int>> _fs;
-
-    public ThreadFactorizer(ConcurrentBag<int> ns, ConcurrentDictionary<int, IReadOnlyList<int>> fs)
-    {
-        _ns = ns;
-        _fs = fs;
-    }
-
     public void Run()
     {
         var ts = new List<Thread>(_ns.Count);
@@ -74,17 +56,8 @@ class ThreadFactorizer : IFactorizer
     }
 }
 
-class TaskFactorizer : IFactorizer
+class TaskFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
 {
-    private readonly ConcurrentBag<int> _ns;
-    private readonly ConcurrentDictionary<int, IReadOnlyList<int>> _fs;
-
-    public TaskFactorizer(ConcurrentBag<int> ns, ConcurrentDictionary<int, IReadOnlyList<int>> fs)
-    {
-        _ns = ns;
-        _fs = fs;
-    }
-
     public void Run()
     {
         var ts = new List<Task>(_ns.Count);
