@@ -91,8 +91,7 @@ abstract class Set {
     public abstract Set Union(Set other);
 }
 
-class SetA : Set {
-    public SetA(int id) : base(id) {}
+class SetA(int id) : Set(id) {
 
     public override Set Union(Set other) {
         var x = this.Find();
@@ -110,16 +109,14 @@ class SetA : Set {
     }
 }
 
-class SetB : Set {
-    public SetB(int id) : base(id) {}
+class SetB(int id) : Set(id) {
 
     // No synchronization whatsoever - this may cause stack overflows
     // on spurious synchronizations.
     public override Set Union(Set other) => Assign(this, other);
 }
 
-class SetC : Set {
-    public SetC(int id) : base(id) {}
+class SetC(int id) : Set(id) {
 
     public override Set Union(Set other) {
         var x = this.Find();

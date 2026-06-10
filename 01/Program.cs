@@ -31,14 +31,9 @@ interface ISequenceBuilder {
     void Print();
 }
 
-class SequenceBuilderA : ISequenceBuilder {
-    private int _n;
+class SequenceBuilderA(int _n) : ISequenceBuilder {
     private List<int> _ns = new List<int>();
     private int _current = 0;
-
-    public SequenceBuilderA(int n) {
-        _n = n;
-    }
 
     public bool Next() {
         if (_current++ < _n) {
@@ -55,15 +50,10 @@ class SequenceBuilderA : ISequenceBuilder {
     }
 }
 
-class SequenceBuilderB : ISequenceBuilder {
-    private int _n;
+class SequenceBuilderB(int _n) : ISequenceBuilder {
     private List<int> _ns = new List<int>();
     private volatile int _current = 0;
 
-    public SequenceBuilderB(int n) {
-        _n = n;
-    }
-
     public bool Next() {
         if (_current++ < _n) {
             _ns.Add(_current);
@@ -79,14 +69,9 @@ class SequenceBuilderB : ISequenceBuilder {
     }
 }
 
-class SequenceBuilderC : ISequenceBuilder {
-    private int _n;
+class SequenceBuilderC(int _n) : ISequenceBuilder {
     private List<int> _ns = new List<int>();
     private int _current = 0;
-
-    public SequenceBuilderC(int n) {
-        _n = n;
-    }
 
     public bool Next() {
         lock (_ns) {
