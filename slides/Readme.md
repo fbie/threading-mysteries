@@ -509,6 +509,58 @@ class TaskRunner : IRunner {
 
 ---
 
+# Mystery 7 #
+
+```csharp
+interface IDownloader {
+    public Task<int> Download(string url);
+}
+IDownloader downloader = ...;
+var bytes = Task.WhenAll(args[1..].Select(url => downloader.Download(Fixup(url)))).Result.Sum();
+```
+
+---
+
+# Mystery 7: A #
+
+```csharp
+public Task<int> Download(string url) {
+    int bytes = 0;
+    var t = new Thread(() => {
+        bytes = client.GetByteArrayAsync(url).Result.Length;
+    });
+    t.Start();
+    t.Join();
+    return Task.FromResult(bytes);
+}
+```
+
+---
+
+# Mystery 7: B #
+
+```csharp
+public Task<int> Download(string url)
+    => Task.Run(() => client
+        .GetByteArrayAsync(url)
+        .ContinueWith(t => t.Result.Length));
+}
+```
+
+---
+
+# Mystery 7: C #
+
+```csharp
+public async Task<int> Download(string url)
+{
+    var bytes = await client.GetByteArrayAsync(url);
+    return bytes.Length;
+}
+```
+
+---
+
 # Take-Aways #
 
 <p style="text-align: center;">Shared mutable state is the root of all evil.</p>
