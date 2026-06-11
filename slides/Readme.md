@@ -1,7 +1,9 @@
-# .NET Threading Mysteries #
-#### Florian Biermann ####
-##### `florian.biermann@protonmail.com` #####
-
+---
+title: '.NET Threading Mysteries'
+author: 'Florian Biermann'
+email: 'florian.biermann@protonmail.com'
+monofont: 'Fira Code'
+monofont-size: 16
 ---
 
 # What #
@@ -39,23 +41,25 @@ Analyzing threading bugs is:
 
 ---
 
-# Crash Course in .NET Threading #
+# Crash Course in .NET Threading 1/2 #
 
 ```csharp
 var t = new Thread(() => ...);
-// Start thread t.
-t.Start();
-// Wait for t to finish.
-t.Join();
-// Submit task to thread pool.
-var s = Task.Run(() => ...);
-// Wait for task s to finish.
-s.Wait();
+t.Start();                   // Start thread t.
+t.Join();                    // Wait for t to finish.
+var s = Task.Run(() => ...); // Submit task to thread pool.
+s.Wait();                    // Wait for task s to finish.
+```
 
+---
+
+# Crash Course in .NET Threading 2/2 #
+
+```csharp
 class C {
-    readonly object _object = new();
+    readonly object _o = new();
     public void F() {
-        // Enter lock on _object
+        // Enter lock on _o
         // from current thread.
         lock (_object) { ... }
     }}
@@ -69,7 +73,8 @@ There are six "threading mysteries". Each mystery:
 
 - takes some kind of input (numbers, files, ...);
 - does *something* with .NET threads; and
-- comes in up to three variants, `A`, `B` and `C`.
+- comes in up to three variants (A, B, C.)
+
 
 Goals:
 
@@ -90,10 +95,11 @@ In small groups (2-3), your task is to:
 Observe and interpret!
 
 Do **now**:
+
 ```
-> git clone https://github.com/fbie/threading-mysteries.git
-> cd threading-mysteries
-> dotnet build
+$ git clone https://github.com/fbie/threading-mysteries.git
+$ cd threading-mysteries
+$ dotnet build -c Release
 ```
 ---
 
@@ -115,10 +121,8 @@ interface ISequenceBuilder {
 ISqeuenceBuilder b = ...;
 var t0 = new Thread(() => { while (b.Next()); });
 var t1 = new Thread(() => { while (b.Next()); });
-t0.Start();
-t1.Start();
-t0.Join();
-t1.Join();
+t0.Start(); t1.Start();
+t0.Join(); t1.Join();
 ```
 
 ---
@@ -126,8 +130,7 @@ t1.Join();
 # Mystery 1: A #
 
 ```csharp
-class SequenceBuilderA : ISequenceBuilder {
-    int _n;
+class SequenceBuilderA(int _n) : ISequenceBuilder {
     List<int> _ns = new List<int>();
     int _current = 0;
 
@@ -144,8 +147,7 @@ class SequenceBuilderA : ISequenceBuilder {
 # Mystery 1: B #
 
 ```csharp
-class SequenceBuilderB : ISequenceBuilder {
-    int _n;
+class SequenceBuilderB(int _n) : ISequenceBuilder {
     List<int> _ns = new List<int>();
     volatile int _current = 0;
 
@@ -162,8 +164,7 @@ class SequenceBuilderB : ISequenceBuilder {
 # Mystery 1: C #
 
 ```csharp
-class SequenceBuilderC : ISequenceBuilder {
-    int _n;
+class SequenceBuilderC(int _n) : ISequenceBuilder {
     List<int> _ns = new List<int>();
     int _current = 0;
 
@@ -234,8 +235,7 @@ class HistogramB : IHistogram {
 
 ```csharp
 class HistogramC : IHistogram {
-    ConcurrentDictionary<char, int> _chars
-        = new();
+    ConcurrentDictionary<char, int> _chars = new();
 
     public void Add(char c) {
         chars.AddOrUpdate(c,
@@ -392,6 +392,7 @@ class PaddedCounter : ICounter
         Interlocked.Add(ref _vs[i].V, n);
     }
 ```
+
 ---
 
 
@@ -557,6 +558,16 @@ public async Task<int> Download(string url)
     var bytes = await client.GetByteArrayAsync(url);
     return bytes.Length;
 }
+```
+
+---
+
+# Mystery 7: C behind the scenes #
+
+The C# compiler generates an abstract state-machine that handles task resumption and exceptions more robustly than `Task.ContinueWith()`!
+
+```
+$ ilspycmd -lv CSharp4 -t AsyncDownloader bin/Release/net10.0/07.dll
 ```
 
 ---
