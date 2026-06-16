@@ -35,11 +35,15 @@ while (counter.Value < threads * increments) { }
 Console.WriteLine($"Counter value: {counter.Value}");
 // Console.WriteLine($"Took {sw.ElapsedMilliseconds}ms");
 
-interface ICounter
+public interface ICounter
 {
     long Value { get; }
     void Add(long value);
     void Increment();
+
+    public static ICounter MakeA() => new InterlockedCounter();
+    public static ICounter MakeB() => new PaddedCounter();
+    public static ICounter MakeC() => new LockingCounter();
 }
 
 class LockingCounter : ICounter

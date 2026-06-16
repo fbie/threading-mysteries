@@ -1,4 +1,4 @@
-﻿namespace test02;
+﻿namespace test03;
 
 [TestClass]
 public sealed class Test
