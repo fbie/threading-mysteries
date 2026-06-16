@@ -1,2 +1,2 @@
 #/bin/bash
-dotnet run --no-build -c Release -- $@
+dotnet run --project src/01.csproj --no-build -c Release -- $@

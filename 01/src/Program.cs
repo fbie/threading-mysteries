@@ -26,14 +26,21 @@ b.Print();
 
 // --- The mysterious implementation. ---
 
-interface ISequenceBuilder {
+public interface ISequenceBuilder {
     bool Next();
-    void Print();
+
+    void Print() {
+        var ns = Sequence;
+        for (var i = 0; i < ns.Count; i++) {
+            Console.WriteLine($"{i} = {ns[i]}");
+        }
+    }
+
+    List<int> Sequence { get; }
 }
 
-
-class SequenceBuilderA(int _n) : ISequenceBuilder {
-    private List<int> _ns = new List<int>();
+public class SequenceBuilderA(int _n) : ISequenceBuilder {
+    private readonly List<int> _ns = new List<int>();
     private int _current = 0;
 
     public bool Next() {
@@ -44,15 +51,11 @@ class SequenceBuilderA(int _n) : ISequenceBuilder {
         return false;
     }
 
-    public void Print() {
-        for (var i = 0; i < _ns.Count; i++) {
-            Console.WriteLine($"{i} = {_ns[i]}");
-        }
-    }
+    public List<int> Sequence => _ns;
 }
 
-class SequenceBuilderB(int _n) : ISequenceBuilder {
-    private List<int> _ns = new List<int>();
+public class SequenceBuilderB(int _n) : ISequenceBuilder {
+    private readonly List<int> _ns = new List<int>();
     private volatile int _current = 0;
 
     public bool Next() {
@@ -63,19 +66,16 @@ class SequenceBuilderB(int _n) : ISequenceBuilder {
         return false;
     }
 
-    public void Print() {
-        for (var i = 0; i < _ns.Count; i++) {
-            Console.WriteLine($"{i} = {_ns[i]}");
-        }
-    }
+    public List<int> Sequence => _ns;
 }
 
-class SequenceBuilderC(int _n) : ISequenceBuilder {
-    private List<int> _ns = new List<int>();
+public class SequenceBuilderC(int _n) : ISequenceBuilder {
+    private readonly object _lock = new();
+    private readonly List<int> _ns = new List<int>();
     private int _current = 0;
 
     public bool Next() {
-        lock (_ns) {
+        lock (_lock) {
             if (_current++ < _n) {
                 _ns.Add(_current);
                 return true;
@@ -84,9 +84,5 @@ class SequenceBuilderC(int _n) : ISequenceBuilder {
         }
     }
 
-    public void Print() {
-        for (var i = 0; i < _ns.Count; i++) {
-            Console.WriteLine($"{i} = {_ns[i]}");
-        }
-    }
+    public List<int> Sequence => _ns;
 }
