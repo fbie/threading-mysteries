@@ -564,7 +564,7 @@ public async Task<int> Download(string url)
 
 # Mystery 7: C behind the scenes #
 
-The C# compiler generates an abstract state-machine that handles task resumption and exceptions more robustly than `Task.ContinueWith()`!
+The C# compiler generates an **abstract state-machine** that handles task resumption and exceptions more robustly than `Task.ContinueWith()`!
 
 ```
 $ ilspycmd -lv CSharp4 -t AsyncDownloader bin/Release/net10.0/07.dll
