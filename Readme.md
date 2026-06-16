@@ -20,7 +20,7 @@ Run the following command from the root folder of this repository:
 $ dotnet build threading-mysteries -c Release
 ```
 
-## Solve the Mysteries ##
+## Solving the Mysteries ##
 
 Enter a mystery directory and run the compiled code using
 
@@ -33,6 +33,13 @@ Alternatively, you can write and run tests:
 $ dotnet test test
 ```
 
+E.g.
+```
+$ cd 01
+$ dotnet run --project src --no-build -c Release -- A 23 # Runs the mystery's executable.
+$ dotnet test test                                       # Runs the mystery's tests.
+```
+
 There are (up to) three variants (`A`, `B` and `C`) for each mystery.
 
 - What do you observe when running the different variants?
@@ -40,15 +47,6 @@ There are (up to) three variants (`A`, `B` and `C`) for each mystery.
 - What happens if you change the input arguments?
 - Are they predictable?
 - Can you form a theory about each underlying implementation?
-
-### Inspecting Mysterious Behavior ###
-
-If a mystery behaves strangely, can you observe anything interesting using `dotnet dump` or `dotnet trace`? Install them via:
-
-```
-$ dotnet tool install --global dotnet-dump dotnet-trace
-```
-
 
 ## Acknowledgements ##
 
