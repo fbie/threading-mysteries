@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="01/src/01.csproj" />
+  <Project Path="02/src/02.csproj" />
+  <Project Path="03/src/03.csproj" />
+  <Project Path="04/src/04.csproj" />
+  <Project Path="05/src/05.csproj" />
+  <Project Path="06/06.csproj" />
+  <Project Path="07/07.csproj" />
+</Solution>
