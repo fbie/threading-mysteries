@@ -54,7 +54,7 @@ Console.WriteLine($"Largest set has {largest.Size} elements.");
 
 // --- The mysterious implementation. ---
 
-abstract class Set {
+public abstract class Set {
     public int Id { get; }
     public int Size { get; set; }
     public Set Parent { get; set; }
@@ -91,7 +91,7 @@ abstract class Set {
     public abstract Set Union(Set other);
 }
 
-class SetA(int id) : Set(id) {
+public class SetA(int id) : Set(id) {
 
     public override Set Union(Set other) {
         var x = this.Find();
@@ -109,14 +109,14 @@ class SetA(int id) : Set(id) {
     }
 }
 
-class SetB(int id) : Set(id) {
+public class SetB(int id) : Set(id) {
 
     // No synchronization whatsoever - this may cause stack overflows
     // on spurious synchronizations.
     public override Set Union(Set other) => Assign(this, other);
 }
 
-class SetC(int id) : Set(id) {
+public class SetC(int id) : Set(id) {
 
     public override Set Union(Set other) {
         var x = this.Find();

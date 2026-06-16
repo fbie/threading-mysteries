@@ -7,4 +7,8 @@
   <Folder Name="/02/test/">
     <Project Path="02/test/test02.csproj" />
   </Folder>
+  <Folder Name="/03/" />
+  <Folder Name="/03/test/">
+    <Project Path="03/test/test03.csproj" />
+  </Folder>
 </Solution>
