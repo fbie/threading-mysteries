@@ -17,7 +17,7 @@ Make sure that the `dotnet` executable is in your environment variables.
 Run the following command from the root folder of this repository:
 
 ```
-$ dotnet build threading-mysteries -c Release
+$ dotnet build threading-mysteries.slnx -c Release
 ```
 
 ## Solving the Mysteries ##
@@ -33,8 +33,14 @@ Alternatively, you can write and run tests:
 $ dotnet test test
 ```
 
-E.g.
+Writing tests requires that you have built the main solution in
+"Release" mode. The projects are separated for pedagogical reasons
+s.t. the code under test is not immediately visible in the test
+project.
+
+The complete flow looks like this:
 ```
+$ dotnet build threading-mysteries.slnx -c Release
 $ cd 01
 $ dotnet run --project src --no-build -c Release -- A 23 # Runs the mystery's executable.
 $ dotnet test test                                       # Runs the mystery's tests.
