@@ -39,12 +39,17 @@ h.Print();
 
 // --- The mysterious implementation. ---
 
-interface IHistogram {
+public interface IHistogram {
     void Add(char c);
-    void Print();
+    void Print() {
+        foreach (var (c, i) in Chars) {
+            Console.WriteLine($"{c} : {i}");
+        }
+    }
+    IDictionary<char, int> Chars { get; }
 }
 
-class HistogramA : IHistogram {
+public class HistogramA : IHistogram {
     private readonly Dictionary<char, int> _chars = new();
 
     public void Add(char c) {
@@ -57,21 +62,18 @@ class HistogramA : IHistogram {
         }
     }
 
-    public void Print() {
-        foreach (var (c, i) in _chars) {
-            Console.WriteLine($"{c} : {i}");
-        }
-    }
+    public IDictionary<char, int> Chars => _chars;
 }
 
-class HistogramB : IHistogram {
+public class HistogramB : IHistogram {
+    private readonly object _lock = new();
     private readonly Dictionary<char, int> _chars = new();
 
     public void Add(char c) {
-        // Lock on _chars; this provides exclusive
+        // Lock on _lock; this provides exclusive
         // access to _chars, but also might be
         // slower on large workloads.
-        lock (_chars) {
+        lock (_lock) {
             if (_chars.TryGetValue(c, out var i)) {
                 _chars[c] = i + 1;
             } else {
@@ -80,14 +82,10 @@ class HistogramB : IHistogram {
         }
     }
 
-    public void Print() {
-        foreach (var (c, i) in _chars) {
-            Console.WriteLine($"{c} : {i}");
-        }
-    }
+    public IDictionary<char, int> Chars => _chars;
 }
 
-class HistogramC : IHistogram {
+public class HistogramC : IHistogram {
     private readonly ConcurrentDictionary<char, int> _chars = new();
 
     public void Add(char c) {
@@ -101,9 +99,5 @@ class HistogramC : IHistogram {
         _chars.AddOrUpdate(c, _ => 1, (c, i) => i + 1);
     }
 
-    public void Print() {
-        foreach (var (c, i) in _chars) {
-            Console.WriteLine($"{c} : {i}");
-        }
-    }
+    public IDictionary<char, int> Chars => _chars;
 }
