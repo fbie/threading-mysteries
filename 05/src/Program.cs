@@ -23,9 +23,12 @@ sw.Start();
 factorizer.Run();
 Console.WriteLine($"Factorized {factors.Count} integers in {sw.ElapsedMilliseconds}ms");
 
-interface IFactorizer
+public interface IFactorizer
 {
     void Run();
+    static IFactorizer MakeA(ConcurrentBag<int> inputs, ConcurrentDictionary<int, IReadOnlyList<int>> factors) => new ThreadFactorizer(inputs, factors);
+    static IFactorizer MakeB(ConcurrentBag<int> inputs, ConcurrentDictionary<int, IReadOnlyList<int>> factors) => new TaskFactorizer(inputs, factors);
+    static IFactorizer MakeC(ConcurrentBag<int> inputs, ConcurrentDictionary<int, IReadOnlyList<int>> factors) => new ParallelForFactorizer(inputs, factors);
 }
 
 class ParallelForFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
