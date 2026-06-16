@@ -5,7 +5,7 @@ public sealed class Test
 {
     [DataRow(10)]
     [TestMethod]
-    public void TestMethod1(int n)
+    public void TestSequence(int n)
     {
         var seq = new int[n];
         for (var i = 0; i < n; i++) {

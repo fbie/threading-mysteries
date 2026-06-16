@@ -5,7 +5,7 @@ public sealed class Test
 {
     [DataRow("../../../../words.txt")]
     [TestMethod]
-    public void TestMethod1(string wordFile)
+    public void TestHistogram(string wordFile)
     {
         var h = new HistogramA(); // HistogramB, HistogramC...
         var content = File.ReadAllText(wordFile);

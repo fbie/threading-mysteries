@@ -13,7 +13,7 @@ public sealed class Test
 
     [DataRow(10)]
     [TestMethod]
-    public void TestUnion(int n)
+    public void TestSet(int n)
     {
         var s = MakeSets(n, i => new SetA(1)); // SetB, SetC...
 
