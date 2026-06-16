@@ -2,7 +2,7 @@
 
 Some C# classes that do mysterious threading things.
 
-Do not browse the source code if you want to solve the mysteries!
+**Do not browse the source code in `src` folders if you want to solve the mysteries!**
 
 
 ## How to build and run ##
@@ -14,10 +14,10 @@ Please install the .NET SDK version 10:
 
 Make sure that the `dotnet` executable is in your environment variables.
 
-To test, run the following command from the root folder of this repository:
+Run the following command from the root folder of this repository:
 
 ```
-$ dotnet build -c Release
+$ dotnet build threading-mysteries -c Release
 ```
 
 ## Solve the Mysteries ##
@@ -25,7 +25,12 @@ $ dotnet build -c Release
 Enter a mystery directory and run the compiled code using
 
 ```
-$ dotnet run --no-build -c Release -- [ A | B | C ] <more options> ...
+$ dotnet run --project src --no-build -c Release -- [ A | B | C ] <more options> ...
+```
+
+Alternatively, you can write and run tests:
+```
+$ dotnet test test
 ```
 
 There are (up to) three variants (`A`, `B` and `C`) for each mystery.
