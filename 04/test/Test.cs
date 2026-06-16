@@ -5,7 +5,7 @@ public sealed class Test
 {
     [DataRow(10000)]
     [TestMethod]
-    public void TestSet(int n)
+    public void TestCounter(int n)
     {
         var c = ICounter.MakeA(); // MakeB, MakeC...
         var t = new Thread(() =>
