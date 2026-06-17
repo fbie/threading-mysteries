@@ -9,6 +9,6 @@
   <Project Path="03/src/03.csproj" />
   <Project Path="04/src/04.csproj" />
   <Project Path="05/src/05.csproj" />
-  <Project Path="06/06.csproj" />
+  <Project Path="06/src/06.csproj" />
   <Project Path="07/07.csproj" />
 </Solution>
