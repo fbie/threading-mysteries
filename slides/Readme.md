@@ -96,9 +96,9 @@ Observe and interpret!
 Do **now**:
 
 ```
-$ git clone https://github.com/fbie/threading-mysteries.git
+$ git clone https://codeberg.org/fbie/threading-mysteries.git
 $ cd threading-mysteries
-$ dotnet build -c Release
+$ dotnet build threading-mysteries.slnx -c Release
 ```
 ---
 
