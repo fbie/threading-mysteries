@@ -3,12 +3,11 @@
 [TestClass]
 public sealed class Test
 {
-    [DataRow("../../../../words.txt")]
+    [DynamicData(nameof(Histograms))]
     [TestMethod]
-    public void TestHistogram(string wordFile)
+    public void TestHistogram(IHistogram h)
     {
-        var h = new HistogramA(); // HistogramB, HistogramC...
-        var content = File.ReadAllText(wordFile);
+        var content = File.ReadAllText("../../../../words.txt"); // Or something else?
         var t = new Thread(() =>
         {
             foreach (var c in content)
@@ -24,4 +23,6 @@ public sealed class Test
 
         Assert.AreNotEqual(0, h.Chars.Count);
     }
+
+    public static IEnumerable<IHistogram> Histograms = [new HistogramA(), new HistogramB(), new HistogramC()];
 }
