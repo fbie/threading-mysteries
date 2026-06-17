@@ -31,13 +31,13 @@ Analyzing threading bugs is:
 
 # Parallelism #
 
-![](slides/vending-machine-parallelism.jpeg)
+![](slides/vending-machines-parallelism.svg)
 
 ---
 
 # Concurrency #
 
-![](slides/vending-machine-concurrency.jpeg)
+![](slides/vending-machines-concurrency.svg)
 
 ---
 
