@@ -1,12 +1,15 @@
-.PHONY: slides show dotnet all
+.PHONY: slides show dotnet test all
 
-all: slides dotnet
+all: slides dotnet test
 
 slides:
 	pandoc -t pptx slides/Readme.md -o slides/slides.pptx
 
 show: slides
-	wslview slides/slides.pptx
+	xdg-open slides/slides.pptx
 
-dotnet:
-	dotnet build
+build:
+	dotnet build threading-mysteries.slnx -c Release
+
+test: build
+	dotnet test threading-mysteries-tests.slnx
