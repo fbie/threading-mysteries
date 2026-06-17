@@ -12,9 +12,9 @@ for (var i = 100; i < n + 100; i++) {
 }
 IFactorizer factorizer = args[0] switch
 {
-    "A" => new ThreadFactorizer(),
-    "B" => new TaskFactorizer(),
-    "C" => new ParallelForFactorizer(),
+    "A" => new FactorizerA(),
+    "B" => new FactorizerB(),
+    "C" => new FactorizerC(),
     _ => throw new ArgumentException("Choose one of A, B or C")
 };
 var sw = new System.Diagnostics.Stopwatch();
@@ -25,24 +25,9 @@ Console.WriteLine($"Factorized {factors.Count} integers in {sw.ElapsedMillisecon
 public interface IFactorizer
 {
     IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns);
-    static IFactorizer MakeA() => new ThreadFactorizer();
-    static IFactorizer MakeB() => new TaskFactorizer();
-    static IFactorizer MakeC() => new ParallelForFactorizer();
 }
 
-class ParallelForFactorizer() : IFactorizer
-{
-    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
-    {
-        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
-        Parallel.ForEach(ns, n => {
-            fs[n] = Util.Factorize(n);
-        });
-        return fs;
-    }
-}
-
-class ThreadFactorizer() : IFactorizer
+public class FactorizerA() : IFactorizer
 {
     public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
     {
@@ -62,7 +47,7 @@ class ThreadFactorizer() : IFactorizer
     }
 }
 
-class TaskFactorizer() : IFactorizer
+public class FactorizerB() : IFactorizer
 {
     public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
     {
@@ -73,6 +58,18 @@ class TaskFactorizer() : IFactorizer
             ts.Add(Task.Run(() => { fs[n] = Util.Factorize(n); }));
         }
         Task.WaitAll(ts);
+        return fs;
+    }
+}
+
+public class FactorizerC() : IFactorizer
+{
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
+    {
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+        Parallel.ForEach(ns, n => {
+            fs[n] = Util.Factorize(n);
+        });
         return fs;
     }
 }
