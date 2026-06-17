@@ -12,13 +12,15 @@ IWaiter waiter = args[0] switch
     _ => throw new ArgumentException("Choose one of A or B")
 };
 for (var i = 0; i < n; i++) {
-    runner.wait(barrier);
+    waiter.Wait(barrier);
 }
 barrier.SignalAndWait();
 
-interface IWaiter
+public interface IWaiter
 {
     void Wait(Barrier barrier);
+    public static IWaiter MakeA() => new ThreadWaiter();
+    public static IWaiter MakeB() => new TaskWaiter();
 }
 
 class ThreadWaiter : IWaiter {
