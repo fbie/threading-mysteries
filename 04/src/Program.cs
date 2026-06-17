@@ -70,17 +70,7 @@ public class CounterB : ICounter
     private readonly PaddedLong[] _values = new PaddedLong[STRIPES];
 
     public long Value
-    {
-        get
-        {
-            var sum = 0L;
-            for (var i = 0; i < _values.Length; i++)
-            {
-                sum += Interlocked.Read(ref _values[i].Value);
-            }
-            return sum;
-        }
-    }
+        => _values.Sum(p => Interlocked.Read(ref p.Value));
 
     public void Add(long value)
         => Interlocked.Add(ref _values[Thread.CurrentThread.ManagedThreadId % STRIPES].Value, value);
