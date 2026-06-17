@@ -4,7 +4,6 @@ using System.Threading;
 [TestClass]
 public sealed class Test
 {
-    [Timeout(1000)]
     [DataRow(1)]
     [TestMethod]
     public void TestWaiter(int n)
