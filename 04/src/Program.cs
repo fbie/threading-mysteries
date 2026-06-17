@@ -8,9 +8,9 @@ if (args.Length != 3)
 }
 ICounter counter = args[0] switch
 {
-    "A" => new InterlockedCounter(),
-    "B" => new PaddedCounter(),
-    "C" => new LockingCounter(),
+    "A" => new CounterA(),
+    "B" => new CounterB(),
+    "C" => new CounterC(),
     _ => throw new ArgumentException("Choose one of A, B or C")
 };
 var threads = int.Parse(args[1]);
@@ -40,13 +40,17 @@ public interface ICounter
     long Value { get; }
     void Add(long value);
     void Increment();
-
-    public static ICounter MakeA() => new InterlockedCounter();
-    public static ICounter MakeB() => new PaddedCounter();
-    public static ICounter MakeC() => new LockingCounter();
 }
 
-class LockingCounter : ICounter
+public class CounterA : ICounter
+{
+    private long _value = 0L;
+    public long Value => Interlocked.Read(ref _value);
+    public void Add(long value) => Interlocked.Add(ref _value, value);
+    public void Increment() => Add(1L);
+}
+
+public class CounterC : ICounter
 {
     private readonly object _lock = new object();
     private long _value = 0L;
@@ -55,15 +59,7 @@ class LockingCounter : ICounter
     public void Increment() => Add(1L);
 }
 
-class InterlockedCounter : ICounter
-{
-    private long _value = 0L;
-    public long Value => Interlocked.Read(ref _value);
-    public void Add(long value) => Interlocked.Add(ref _value, value);
-    public void Increment() => Add(1L);
-}
-
-class PaddedCounter : ICounter
+public class CounterB : ICounter
 {
     [StructLayout(LayoutKind.Explicit, Size=64)]
     struct PaddedLong {

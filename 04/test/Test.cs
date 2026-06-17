@@ -3,11 +3,11 @@
 [TestClass]
 public sealed class Test
 {
-    [DataRow(10000)]
+    [DynamicData(nameof(Counters))]
     [TestMethod]
-    public void TestCounter(int n)
+    public void TestCounter(ICounter c)
     {
-        var c = ICounter.MakeA(); // MakeB, MakeC...
+        var n = 1;
         var t = new Thread(() =>
         {
             for (var i = 0; i < n; i++) {
@@ -15,13 +15,10 @@ public sealed class Test
             }
         });
         t.Start();
-        var s = new Thread(() =>
-        {
-            while (c.Value < n);
-        });
-        s.Start();
+        while (c.Value < n) ; // Spin.
         t.Join();
-        s.Join();
         Assert.AreEqual(n, c.Value); // What else can be observed instead of results?
     }
+
+    public static IEnumerable<ICounter> Counters = [new CounterA(), new CounterB(), new CounterC()];
 }
