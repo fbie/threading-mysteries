@@ -59,7 +59,7 @@ s.Wait();                    // Wait for task s to finish.
 class C {
     readonly object o = new(); // Why readonly?
     public void F() {
-        // Enter lock on o from current thread.
+        // Lock on o from calling thread.
         lock (o) { ... }
     }}
 ```
@@ -75,15 +75,15 @@ There are six "threading mysteries". Each mystery:
 - comes in up to three variants (A, B, C.)
 
 
-Goals:
+**Goals:**
 
-1. experience some unexpected behavior;
-2. try to understand the causes; and
+1. experience unexpected(?) behavior;
+2. build a hypothesis about causes; and
 3. connect the two.
 
 ---
 
-# Your task #
+# Your Task for Today #
 
 In small groups (2-3), your task is to:
 
@@ -93,13 +93,17 @@ In small groups (2-3), your task is to:
 
 Observe and interpret!
 
-Do **now**:
+---
+
+# Do Now! #
 
 ```
 $ git clone https://codeberg.org/fbie/threading-mysteries.git
 $ cd threading-mysteries
 $ dotnet build threading-mysteries.slnx -c Release
+$ dotnet test threading-mysteries-tests.slnx
 ```
+
 ---
 
 # Solving the Mysteries #
@@ -118,10 +122,10 @@ interface ISequenceBuilder {
     bool Next();
 }
 ISqeuenceBuilder b = ...;
-var t0 = new Thread(() => { while (b.Next()); });
-var t1 = new Thread(() => { while (b.Next()); });
-t0.Start(); t1.Start();
-t0.Join(); t1.Join();
+var t = new Thread(() => { while (b.Next()); });
+t.Start();
+while (b.Next());
+t.Join();
 ```
 
 ---
@@ -339,7 +343,7 @@ for (var i = 0; i < threads; i++)
 # Mystery 4: C #
 
 ```csharp
-class LockingCounter : ICounter {
+class CounterC : ICounter {
     readonly object _lock = new object();
     long _value = 0L;
 
@@ -357,7 +361,7 @@ class LockingCounter : ICounter {
 
 # Mystery 4: A #
 ```csharp
-class InterlockedCounter : ICounter {
+class CounterA : ICounter {
     long _value = 0L;
 
     public long Value
@@ -372,7 +376,7 @@ class InterlockedCounter : ICounter {
 
 # Mystery 4: B #
 ```csharp
-class PaddedCounter : ICounter
+class CounterB : ICounter
 {
     [StructLayout(LayoutKind.Explicit, Size=64)]
     struct PaddedLong { [FieldOffset(0)] public long V; }
@@ -402,7 +406,8 @@ interface IFactorizer {
     void Run();
 }
 IFactorizer f = ...;
-f.Run();
+ConcurrentBag<int> input = ...;
+var factors = f.Run(input);
 ```
 
 ---
@@ -410,21 +415,20 @@ f.Run();
 # Mystery 5: A #
 
 ```csharp
-class ThreadFactorizer : IFactorizer {
-    ConcurrentBag<int> _ns;
-    ConcurrentDictionary<int, IList<int>> _fs;
-
-    public void Run() {
-        var ts = new List<Thread>(_ns.Count);
+class FactorizerA : IFactorizer {
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns) {
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+        var ts = new List<Thread>(ns.Count);
         while (_ns.TryTake(out var n)) {
             var t = new Thread(() => {
-                _fs[n] = Util.Factorize(n);
+                fs[n] = Util.Factorize(n);
                 });
             t.Start();
             ts.Add(t);
         }
         foreach (var t in ts)
         t.Join();
+        return fs;
         }}
 ```
 
@@ -433,18 +437,17 @@ class ThreadFactorizer : IFactorizer {
 # Mystery 5: B #
 
 ```csharp
-class TaskFactorizer : IFactorizer {
-    ConcurrentBag<int> _ns;
-    ConcurrentDictionary<int, IList<int>> _fs;
-
-    public void Run() {
+class FactorizerB : IFactorizer {
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns) {
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
         var ts = new List<Task>(_ns.Count);
         while (_ns.TryTake(out var n))
             ts.Add(Task.Run(() => {
-                _fs[n] = Util.Factorize(n);
+                fs[n] = Util.Factorize(n);
                 }));
         foreach (var t in ts)
             t.Wait();
+        return fs;
     }}
 ```
 
@@ -453,14 +456,13 @@ class TaskFactorizer : IFactorizer {
 # Mystery 5: C #
 
 ```csharp
-class ParallelForFactorizer : IFactorizer {
-    ConcurrentBag<int> _ns;
-    ConcurrentDictionary<int, IList<int>> _fs;
-
-    public void Run() {
+class FactorizerC : IFactorizer {
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns) {
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
         Parallel.ForEach(_ns, n => {
-            _fs[n] = Util.Factorize(n);
+            fs[n] = Util.Factorize(n);
         });
+        return fs;
     }
 }
 ```
@@ -470,13 +472,13 @@ class ParallelForFactorizer : IFactorizer {
 # Mystery 6 #
 
 ```csharp
-interface IRunner {
-    void Run(Barrier barrier);
+interface IWaiter {
+    void Wait(Barrier barrier);
 }
-IRunner runner = ...;
+IWaiter waiter = ...;
 var barrier = new Barrier(n + 1);
 for (var i = 0; i < n; i++)
-    runner.Run(barrier);
+    runner.Wait(barrier);
 barrier.SignalAndWait();
 
 ```
@@ -485,8 +487,8 @@ barrier.SignalAndWait();
 # Mystery 6: A #
 
 ```csharp
-class ThreadRunner : IRunner {
-    public void Run(Barrier barrier) {
+class WaiterA : IRunner {
+    public void Wait(Barrier barrier) {
         new Thread(() => {
             barrier.SignalAndWait();
         })
@@ -499,8 +501,8 @@ class ThreadRunner : IRunner {
 # Mystery 6: B #
 
 ```csharp
-class TaskRunner : IRunner {
-    public void Run(Barrier barrier) {
+class WaiterB : IRunner {
+    public void Wait(Barrier barrier) {
         Task.Run(() => {
             barrier.SignalAndWait();
         });
