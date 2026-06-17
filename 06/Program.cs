@@ -5,26 +5,26 @@
 }
 var n = int.Parse(args[1]);
 var barrier = new Barrier(n + 1);
-IRunner runner = args[0] switch
+IWaiter waiter = args[0] switch
 {
-    "A" => new ThreadRunner(),
-    "B" => new TaskRunner(),
+    "A" => new ThreadWaiter(),
+    "B" => new TaskWaiter(),
     _ => throw new ArgumentException("Choose one of A or B")
 };
 for (var i = 0; i < n; i++) {
-    runner.Run(barrier);
+    runner.wait(barrier);
 }
 barrier.SignalAndWait();
 
-interface IRunner
+interface IWaiter
 {
-    void Run(Barrier barrier);
+    void Wait(Barrier barrier);
 }
 
-class ThreadRunner : IRunner {
-    public void Run(Barrier barrier) => new Thread(() => barrier.SignalAndWait()).Start();
+class ThreadWaiter : IWaiter {
+    public void Wait(Barrier barrier) => new Thread(() => barrier.SignalAndWait()).Start();
 }
 
-class TaskRunner : IRunner {
-    public void Run(Barrier barrier) => Task.Run(() => barrier.SignalAndWait());
+class TaskWaiter : IWaiter {
+    public void Wait(Barrier barrier) => Task.Run(() => barrier.SignalAndWait());
 }
