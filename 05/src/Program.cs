@@ -10,45 +10,47 @@ var inputs = new ConcurrentBag<int>();
 for (var i = 100; i < n + 100; i++) {
     inputs.Add(i);
 }
-var factors = new ConcurrentDictionary<int, IReadOnlyList<int>>();
 IFactorizer factorizer = args[0] switch
 {
-    "A" => new ThreadFactorizer(inputs, factors),
-    "B" => new TaskFactorizer(inputs, factors),
-    "C" => new ParallelForFactorizer(inputs, factors),
+    "A" => new ThreadFactorizer(),
+    "B" => new TaskFactorizer(),
+    "C" => new ParallelForFactorizer(),
     _ => throw new ArgumentException("Choose one of A, B or C")
 };
 var sw = new System.Diagnostics.Stopwatch();
 sw.Start();
-factorizer.Run();
+var factors = factorizer.Run(inputs);
 Console.WriteLine($"Factorized {factors.Count} integers in {sw.ElapsedMilliseconds}ms");
 
 public interface IFactorizer
 {
-    void Run();
-    static IFactorizer MakeA(ConcurrentBag<int> inputs, ConcurrentDictionary<int, IReadOnlyList<int>> factors) => new ThreadFactorizer(inputs, factors);
-    static IFactorizer MakeB(ConcurrentBag<int> inputs, ConcurrentDictionary<int, IReadOnlyList<int>> factors) => new TaskFactorizer(inputs, factors);
-    static IFactorizer MakeC(ConcurrentBag<int> inputs, ConcurrentDictionary<int, IReadOnlyList<int>> factors) => new ParallelForFactorizer(inputs, factors);
+    IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns);
+    static IFactorizer MakeA() => new ThreadFactorizer();
+    static IFactorizer MakeB() => new TaskFactorizer();
+    static IFactorizer MakeC() => new ParallelForFactorizer();
 }
 
-class ParallelForFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
+class ParallelForFactorizer() : IFactorizer
 {
-    public void Run()
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
     {
-        Parallel.ForEach(_ns, n => {
-            _fs[n] = Util.Factorize(n);
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+        Parallel.ForEach(ns, n => {
+            fs[n] = Util.Factorize(n);
         });
+        return fs;
     }
 }
 
-class ThreadFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
+class ThreadFactorizer() : IFactorizer
 {
-    public void Run()
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
     {
-        var ts = new List<Thread>(_ns.Count);
-        while (_ns.TryTake(out var n))
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+        var ts = new List<Thread>(ns.Count);
+        while (ns.TryTake(out var n))
         {
-            var t = new Thread(() => { _fs[n] = Util.Factorize(n); });
+            var t = new Thread(() => { fs[n] = Util.Factorize(n); });
             t.Start();
             ts.Add(t);
         }
@@ -56,22 +58,22 @@ class ThreadFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOn
         {
             t.Join();
         }
+        return fs;
     }
 }
 
-class TaskFactorizer(ConcurrentBag<int> _ns, ConcurrentDictionary<int, IReadOnlyList<int>> _fs) : IFactorizer
+class TaskFactorizer() : IFactorizer
 {
-    public void Run()
+    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns)
     {
-        var ts = new List<Task>(_ns.Count);
-        while (_ns.TryTake(out var n))
+        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+        var ts = new List<Task>(ns.Count);
+        while (ns.TryTake(out var n))
         {
-            ts.Add(Task.Run(() => { _fs[n] = Util.Factorize(n); }));
+            ts.Add(Task.Run(() => { fs[n] = Util.Factorize(n); }));
         }
-        foreach (var t in ts)
-        {
-            t.Wait();
-        }
+        Task.WaitAll(ts);
+        return fs;
     }
 }
 
