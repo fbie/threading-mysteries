@@ -353,8 +353,7 @@ class CounterC : ICounter {
 
     public void Add(long value) {
         lock (_lock) { _value += value; }
-    }
-}
+    }}
 
 ```
 ---
@@ -369,31 +368,26 @@ class CounterA : ICounter {
 
     public void Add(long value) {
         Interlocked.Add(ref _value, value);
-    }
-}
+    }}
 ```
 ---
 
 # Mystery 4: B #
 ```csharp
-class CounterB : ICounter
+public class CounterB : ICounter
 {
     [StructLayout(LayoutKind.Explicit, Size=64)]
-    struct PaddedLong { [FieldOffset(0)] public long V; }
+    struct PaddedLong { [FieldOffset(0)] public long Value; }
 
-    private readonly PaddedLong[] _vs = new PaddedLong[32];
+    readonly PaddedLong[] _values = new PaddedLong[32];
 
-    public long Value { get {
-        var s = 0L;
-        for (var i = 0; i < _vs.Length; i++)
-            s += Interlocked.Read(ref _vs[i].V);
-        return s;
+    public long Value
+        => _values.Sum(p => Interlocked.Read(ref p.Value));
+
+    public void Add(long value) {
+        var n = Thread.CurrentThread.ManagedThreadId % 32;
+        Interlocked.Add(ref _values[n].Value, value);
     }}
-
-    public void Add(long n) {
-        var i = Thread.CurrentThread.ManagedThreadId % 32;
-        Interlocked.Add(ref _vs[i].V, n);
-    }
 ```
 
 ---
@@ -416,8 +410,8 @@ var factors = f.Run(input);
 
 ```csharp
 class FactorizerA : IFactorizer {
-    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns) {
-        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+    public Factors Run(ConcurrentBag<int> ns) {
+        Factors fs = new();
         var ts = new List<Thread>(ns.Count);
         while (_ns.TryTake(out var n)) {
             var t = new Thread(() => {
@@ -438,8 +432,8 @@ class FactorizerA : IFactorizer {
 
 ```csharp
 class FactorizerB : IFactorizer {
-    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns) {
-        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+    public Factors Run(ConcurrentBag<int> ns) {
+        Factors fs = new();
         var ts = new List<Task>(_ns.Count);
         while (_ns.TryTake(out var n))
             ts.Add(Task.Run(() => {
@@ -457,8 +451,8 @@ class FactorizerB : IFactorizer {
 
 ```csharp
 class FactorizerC : IFactorizer {
-    public IReadOnlyDictionary<int, IReadOnlyList<int>> Run(ConcurrentBag<int> ns) {
-        ConcurrentDictionary<int, IReadOnlyList<int>> fs = new();
+    public Factors Run(ConcurrentBag<int> ns) {
+        Factors fs = new();
         Parallel.ForEach(_ns, n => {
             fs[n] = Util.Factorize(n);
         });
