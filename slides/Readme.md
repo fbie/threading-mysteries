@@ -57,11 +57,10 @@ s.Wait();                    // Wait for task s to finish.
 
 ```csharp
 class C {
-    readonly object _o = new();
+    readonly object o = new(); // Why readonly?
     public void F() {
-        // Enter lock on _o
-        // from current thread.
-        lock (_object) { ... }
+        // Enter lock on o from current thread.
+        lock (o) { ... }
     }}
 ```
 
