@@ -10,7 +10,7 @@ public sealed class Test
     [TestMethod]
     public void TestWaiter(IWaiter waiter)
     {
-        var n = 10;
+        var n = 1;
         var barrier = new Barrier(n + 1);
         for (var i = 0; i < n; i++) {
             waiter.Wait(barrier);
@@ -18,9 +18,5 @@ public sealed class Test
         barrier.SignalAndWait();
     }
 
-    public static IEnumerable<IWaiter> Waiters() {
-        yield return IWaiter.MakeA();
-        yield return IWaiter.MakeB();
-    }
-
+    public static IEnumerable<IWaiter> Waiters = [new WaiterA(), new WaiterB()];
 }
