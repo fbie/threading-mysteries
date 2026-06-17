@@ -19,4 +19,8 @@
   <Folder Name="/05/test/">
     <Project Path="05/test/test05.csproj" />
   </Folder>
+  <Folder Name="/06/" />
+  <Folder Name="/06/test/">
+    <Project Path="06/test/test06.csproj" />
+  </Folder>
 </Solution>
