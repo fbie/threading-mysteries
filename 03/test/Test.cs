@@ -11,12 +11,10 @@ public sealed class Test
         return sets;
     }
 
-    [DataRow(10)]
-    [TestMethod]
-    public void TestSet(int n)
+    public void TestSet(Func<int, Set> f)
     {
-        var s = MakeSets(n, i => new SetA(1)); // SetB, SetC...
-
+        var n = 10;
+        var s = MakeSets(n, f);
         var t = new Thread(() =>
         {
             for (var i = 1; i < n; i++) {
@@ -25,10 +23,17 @@ public sealed class Test
         });
         t.Start();
         t.Join();
-
         foreach (var e in s) {
             Assert.AreEqual(s[0].Parent, e.Parent);
         }
-
     }
+
+    [TestMethod]
+    public void TestSetA() => TestSet(i => new SetA(i));
+
+    [TestMethod]
+    public void TestSetB() => TestSet(i => new SetB(i));
+
+    [TestMethod]
+    public void TestSetC() => TestSet(i => new SetC(i));
 }
