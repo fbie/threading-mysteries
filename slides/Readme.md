@@ -392,6 +392,21 @@ public class CounterB : ICounter
 
 ---
 
+# CPU Caches and False Sharing #
+
+
+| Cache Line | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|:-----------|---|---|---|---|---|---|---|---|
+| 1          |   |   |   |   |   |   |   |   |
+| 2          |   |   |   |   |   |   |   |   |
+| 3          |   |   |   |   |   |   |   |   |
+| 4          |   |   |   |   |   |   |   |   |
+| 5          |   |   |   |   |   |   |   |   |
+| 6          |   |   |   |   |   |   |   |   |
+| 7          |   |   |   |   |   |   |   |   |
+| 8          |   |   |   |   |   |   |   |   |
+
+---
 
 # Mystery 5 #
 
@@ -472,7 +487,7 @@ interface IWaiter {
 IWaiter waiter = ...;
 var barrier = new Barrier(n + 1);
 for (var i = 0; i < n; i++)
-    runner.Wait(barrier);
+    waiter.Wait(barrier);
 barrier.SignalAndWait();
 
 ```
