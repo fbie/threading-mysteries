@@ -93,6 +93,9 @@ public abstract class Set {
         // Normally, we would implement this iteratively.  Using
         // recursion, we can provoke a stack overflow, which is more
         // easily distinguishable from a deadlock than a livelock.
+        //
+        // Also, note that this does not synchronize, an attempt at
+        // "optimistic" concurrency.
         if (_parent != this) {
             _parent = _parent.Find();
         }
@@ -113,9 +116,10 @@ public class SetA(int id) : Set(id) {
         if (y.Id < x.Id) {
             (x, y) = (y, x);
         }
-        lock (x)
-        lock (y) {
-            return Assign(x, y);
+        lock (x){
+            lock (y) {
+                return Assign(x, y);
+            }
         }
     }
 }
@@ -133,8 +137,11 @@ public class SetC(int id) : Set(id) {
         var y = other.Find();
         // No swapping, this can deadlock.
         lock (x)
-        lock (y) {
-            return Assign(x, y);
+        {
+            lock (y)
+            {
+                return Assign(x, y);
+            }
         }
     }
 }
