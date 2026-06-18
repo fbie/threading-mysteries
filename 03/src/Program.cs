@@ -11,7 +11,9 @@ if (args.Length < 2) {
     Console.WriteLine("Usage: 03.exe [A|B|C] <number-of-sets> <path to file> <path to file>...");
     return;
 }
-var n = int.Parse(args[1]);
+if (!int.TryParse(args[1], out var n) || n < 1) {
+    throw new ArgumentException($"Expected a non-negative number, got {args[1]}");
+}
 Set[] sets = args[0] switch {
     "A" => MakeSets(n, i => new SetA(i)),
     "B" => MakeSets(n, i => new SetB(i)),
@@ -23,10 +25,16 @@ var threads = new List<Thread>();
 var barrier = new Barrier(args.Length - 1); // Num threads + main thread.
 for (var i = 2; i < args.Length; i++) {
     var arg = args[i];
+    var lines = File.ReadAllLines(arg);
+        if (!int.TryParse(lines.First(), out var m)) {
+            throw new ArgumentException("Malformed input file: first line should define number of sets");
+        }
+        if (n < m) {
+            throw new ArgumentException($"Input file requires {m} sets but only {n} sets initialized");
+        }
     var t = new Thread(() => {
-        var lines = File.ReadAllLines(arg);
         barrier.SignalAndWait();
-        foreach (var line in lines) {
+        foreach (var line in lines.Skip(1)) {
             var split = line.Split(" ");
             var x = int.Parse(split[0]);
             var y = int.Parse(split[1]);
