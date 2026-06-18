@@ -24,7 +24,7 @@ public sealed class Test
         t.Start();
         t.Join();
         foreach (var e in s) {
-            Assert.AreEqual(s[0].Parent, e.Parent);
+            Assert.AreEqual(s[0].Find(), e.Find());
         }
     }
 

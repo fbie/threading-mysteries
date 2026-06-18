@@ -65,12 +65,12 @@ Console.WriteLine($"Largest set has {largest.Size} elements.");
 public abstract class Set {
     public int Id { get; }
     public int Size { get; set; }
-    public Set Parent { get; set; }
+    private Set _parent;
 
     public Set(int id) {
         Id = id;
         Size = 1;
-        Parent = this;
+        _parent = this;
     }
 
     protected static Set Assign(Set x, Set y) {
@@ -82,7 +82,7 @@ public abstract class Set {
         if (x.Size < y.Size) {
             (x, y) = (y, x);
         }
-        y.Parent = x;
+        y._parent = x;
         var size = x.Size + y.Size;
         x.Size = size;
         y.Size = size;
@@ -90,10 +90,13 @@ public abstract class Set {
     }
 
     public Set Find() {
-        if (Parent != this) {
-            Parent = Parent.Find();
+        // Normally, we would implement this iteratively.  Using
+        // recursion, we can provoke a stack overflow, which is more
+        // easily distinguishable from a deadlock than a livelock.
+        if (_parent != this) {
+            _parent = _parent.Find();
         }
-        return Parent;
+        return _parent;
     }
 
     public abstract Set Union(Set other);
@@ -118,7 +121,6 @@ public class SetA(int id) : Set(id) {
 }
 
 public class SetB(int id) : Set(id) {
-
     // No synchronization whatsoever - this may cause stack overflows
     // on spurious synchronizations.
     public override Set Union(Set other) => Assign(this, other);
