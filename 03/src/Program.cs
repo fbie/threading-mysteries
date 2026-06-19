@@ -73,7 +73,7 @@ public abstract class Set {
         _parent = this;
     }
 
-    protected static Set Assign(Set x, Set y) {
+    protected static Set Join(Set x, Set y) {
         x = x.Find();
         y = y.Find();
         if (x == y) {
@@ -118,7 +118,7 @@ public class SetA(int id) : Set(id) {
         }
         lock (x){
             lock (y) {
-                return Assign(x, y);
+                return Join(x, y);
             }
         }
     }
@@ -127,7 +127,7 @@ public class SetA(int id) : Set(id) {
 public class SetB(int id) : Set(id) {
     // No synchronization whatsoever - this may cause stack overflows
     // on spurious synchronizations.
-    public override Set Union(Set other) => Assign(this, other);
+    public override Set Union(Set other) => Join(this, other);
 }
 
 public class SetC(int id) : Set(id) {
@@ -140,7 +140,7 @@ public class SetC(int id) : Set(id) {
         {
             lock (y)
             {
-                return Assign(x, y);
+                return Join(x, y);
             }
         }
     }

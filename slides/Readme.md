@@ -287,9 +287,9 @@ for (var i = 2; i < args.Length; i++) {
 
 ```csharp
 class SetB : Set {
-    public override Set Union(Set other) => Assign(this, other);
+    public override Set Union(Set other) => Join(this, other);
 
-    protected static Set Assign(Set x, Set y) {
+    protected static Set Join(Set x, Set y) {
         x = x.Find(); y = y.Find();
         if (x == y) return x;
         if (x.Size < y.Size) (x, y) = (y, x);
@@ -311,7 +311,7 @@ class SetC : Set {
         var x = this.Find();
         var y = other.Find();
         lock (x) { lock (y) {
-            return Assign(x, y);
+            return Join(x, y);
         }}}}
 ```
 ---
@@ -327,7 +327,7 @@ class SetA : Set {
             (x, y) = (y, x);
         }
         lock (x) { lock (y) {
-            return Assign(x, y);
+            return Join(x, y);
         }}}}
 ```
 ---
