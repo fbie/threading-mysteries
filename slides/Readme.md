@@ -287,8 +287,16 @@ for (var i = 2; i < args.Length; i++) {
 
 ```csharp
 class SetB : Set {
-    public override Set Union(Set other) {
-        Assign(this, other);
+    public override Set Union(Set other) => Assign(this, other);
+
+    protected static Set Assign(Set x, Set y) {
+        x = x.Find(); y = y.Find();
+        if (x == y) return x;
+        if (x.Size < y.Size) (x, y) = (y, x);
+        y._parent = x;
+        var size = x.Size + y.Size;
+        x.Size = size; y.Size = size;
+        return x;
     }
 }
 ```
