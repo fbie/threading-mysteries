@@ -22,7 +22,13 @@ $ dotnet build threading-mysteries.slnx -c Release
 
 ## Solving the Mysteries ##
 
-Enter a mystery directory and run the compiled code using
+Enter a mystery directory and run the compiled code using:
+
+```
+$ ./run [ A | B | C ] <more options> ...
+```
+
+Or more explicitly:
 
 ```
 $ dotnet run --project src --no-build -c Release -- [ A | B | C ] <more options> ...
@@ -42,7 +48,8 @@ The complete flow looks like this:
 ```
 $ dotnet build threading-mysteries.slnx -c Release
 $ cd 01
-$ dotnet run --project src --no-build -c Release -- A 23 # Runs the mystery's executable.
+$ ./run A 23                                             # Runs the mystery's executable.
+$ dotnet run --project src --no-build -c Release -- A 23 # Same as above.
 $ dotnet test test                                       # Runs the mystery's tests.
 ```
 
